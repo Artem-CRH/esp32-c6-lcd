@@ -28,8 +28,8 @@ wifi:
 captive_portal:
 
 spi:
-  clk_pin: GPIO6
-  mosi_pin: GPIO7
+  clk_pin: GPIO7
+  mosi_pin: GPIO6
 
 font:
   - file: "gfonts://Roboto"
