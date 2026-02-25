@@ -1,0 +1,67 @@
+substitutions:
+  name: esp32-c6-lcd
+  friendly_name: ESP32 C6 LCD
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32-c6-devkitc-1
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "${friendly_name} Fallback"
+    password: !secret wifi_ap_password
+
+captive_portal:
+
+spi:
+  clk_pin: GPIO7
+  mosi_pin: GPIO6
+
+font:
+  - file: "gfonts://Roboto"
+    id: font_small
+    size: 18
+  - file: "gfonts://Roboto"
+    id: font_big
+    size: 48
+
+sensor:
+  - platform: uptime
+    id: uptime_seconds
+    name: "${friendly_name} Uptime"
+    unit_of_measurement: s
+    accuracy_decimals: 0
+    update_interval: 1s
+
+display:
+  - platform: st7789v
+    model: CUSTOM
+    width: 172
+    height: 320
+    offset_width: 0
+    offset_height: 34
+    rotation: 90
+    cs_pin: GPIO14
+    dc_pin: GPIO15
+    reset_pin: GPIO21
+    backlight_pin: GPIO22
+    update_interval: 500ms
+    lambda: |-
+      it.fill(Color::BLACK);
+      it.printf(86, 24, id(font_small), Color::WHITE, TextAlign::TOP_CENTER, "Display-Test");
+      it.printf(86, 84, id(font_big), Color(0, 255, 0), TextAlign::TOP_CENTER, "%.0f", id(uptime_seconds).state);
+      it.printf(86, 250, id(font_small), Color::WHITE, TextAlign::TOP_CENTER, "Sekunden seit Start");
